@@ -1,0 +1,20 @@
+{
+  "name": "grokdesk-ios",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Native iPhone shell for the GrokDesk UI (Capacitor)",
+  "type": "module",
+  "scripts": {
+    "copy-web": "node copy-web.js",
+    "ios:init": "npm run copy-web && npx cap add ios && npx cap sync ios",
+    "ios:sync": "npm run copy-web && npx cap sync ios",
+    "ios:open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}

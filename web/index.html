@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>GrokDesk Sniper</title>
+  <meta name="description" content="Self-learning AI trading desk that snipes Pump.fun launches (paper trading).">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#05070a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GrokDesk">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-tab="market">
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#19f08c"/><stop offset="1" stop-color="#7c6cff"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="#0b0f14" stroke="url(#lg)" stroke-width="2"/><path d="M9 21.5 14 15l3.5 3.5L23 10" fill="none" stroke="url(#lg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="23" cy="10" r="2.2" fill="#19f08c"/></svg>
+      <div>
+        <div class="brand-name">GROKDESK</div>
+        <div class="brand-sub">Pump.fun Sniper Team</div>
+      </div>
+    </div>
+    <div class="pills">
+      <span class="pill" id="pill-feed"><i class="dot"></i><span>connecting…</span></span>
+      <span class="pill pill-paper">PAPER</span>
+      <span class="pill hide-sm" id="pill-sol">SOL —</span>
+      <span class="pill hide-sm" id="pill-llm">AI —</span>
+    </div>
+    <div class="controls">
+      <button class="btn" id="btn-pause" title="Pause new entries">Pause</button>
+      <button class="btn hide-sm" id="btn-evolve" title="Run an evolution cycle now">Evolve</button>
+      <button class="btn icon" id="btn-settings" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg></button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ======================= TOP: live feed + portfolio ======================= -->
+    <section class="panel feed" data-section="market">
+      <div class="panel-head">
+        <div class="ph-title"><span class="live-dot"></span>Live Launches <span class="muted" id="feed-count"></span></div>
+        <div class="seg" id="feed-filter">
+          <button class="on" data-f="all">All</button>
+          <button data-f="alive">Alive</button>
+          <button data-f="safe">Safe</button>
+          <button data-f="held">Sniped</button>
+        </div>
+      </div>
+      <div class="feed-cols">
+        <span>Coin</span><span>MCap</span><span class="hide-sm">Curve</span><span>Flow</span><span class="hide-md">Safety</span><span>Score</span>
+      </div>
+      <div class="feed-list" id="feed-list"><div class="empty">Waiting for launches…</div></div>
+    </section>
+
+    <section class="panel port" data-section="portfolio">
+      <div class="panel-head">
+        <div class="ph-title">Portfolio</div>
+        <div class="seg" id="range">
+          <button data-r="900">15m</button>
+          <button class="on" data-r="3600">1H</button>
+          <button data-r="21600">6H</button>
+          <button data-r="0">All</button>
+        </div>
+      </div>
+      <div class="equity-row">
+        <div>
+          <div class="equity" id="eq-main">— SOL</div>
+          <div class="equity-sub"><span id="eq-usd">$—</span> <span id="eq-chg" class="chg">—</span></div>
+        </div>
+        <div class="risk-badge" id="risk-badge">Risk OK</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart"></canvas><div class="chart-tip" id="chart-tip"></div></div>
+      <div class="tiles">
+        <div class="tile"><span>Win rate</span><b id="t-wr">—</b></div>
+        <div class="tile"><span>Trades</span><b id="t-n">—</b></div>
+        <div class="tile"><span>Open</span><b id="t-open">—</b></div>
+        <div class="tile"><span>Today</span><b id="t-day">—</b></div>
+        <div class="tile"><span>Max DD</span><b id="t-dd">—</b></div>
+      </div>
+      <div class="positions" id="positions"></div>
+    </section>
+
+    <!-- ======================= BOTTOM: GrokDesk ======================= -->
+    <section class="desk" data-section="desk">
+      <div class="desk-head">
+        <div class="desk-title">
+          <span class="grok-mark">◆</span> GrokDesk <span class="muted">· AI trading team</span>
+        </div>
+        <div class="learn-strip" id="learn-strip">—</div>
+      </div>
+      <div class="desk-grid">
+        <div class="panel agents" id="agents"></div>
+        <div class="panel chat">
+          <div class="panel-head">
+            <div class="ph-title">Desk Feed</div>
+            <div class="seg" id="chat-filter">
+              <button class="on" data-c="all">All</button>
+              <button data-c="trades">Trades</button>
+              <button data-c="learn">Learning</button>
+            </div>
+          </div>
+          <div class="chat-list" id="chat"></div>
+        </div>
+        <div class="panel lab" data-section="lab">
+          <div class="panel-head">
+            <div class="seg" id="lab-tabs">
+              <button class="on" data-l="strategies">Strategies</button>
+              <button data-l="lessons">Lessons</button>
+              <button data-l="trades">Trades</button>
+            </div>
+          </div>
+          <div class="lab-body" id="lab"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <button data-tab="market" class="on"><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 4 8-9"/><path d="M14 6h6v6"/></svg>Market</button>
+    <button data-tab="portfolio"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Portfolio</button>
+    <button data-tab="desk"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>Desk</button>
+    <button data-tab="lab"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.5 18.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3"/></svg>Lab</button>
+  </nav>
+
+  <dialog id="settings">
+    <form method="dialog" class="settings">
+      <h3>Settings</h3>
+      <label>Backend URL <small>(leave blank on the web; set it in the iPhone app)</small>
+        <input id="set-backend" placeholder="https://your-server:8787" autocomplete="off"></label>
+      <label>Control token <small>(only if the server sets CONTROL_TOKEN)</small>
+        <input id="set-token" type="password" autocomplete="off"></label>
+      <div class="settings-row">
+        <button class="btn danger" id="btn-reset" type="button">Reset paper account</button>
+        <a class="btn" href="api/ledger" target="_blank" id="ledger-link">Open ledger</a>
+      </div>
+      <p class="fine">Paper trading only. No wallet keys are used and no real orders are sent. Simulated results do not predict live results.</p>
+      <div class="settings-row end"><button class="btn" value="cancel">Close</button><button class="btn primary" id="set-save" value="ok">Save</button></div>
+    </form>
+  </dialog>
+
+  <script src="chart.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

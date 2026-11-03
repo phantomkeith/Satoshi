@@ -1,0 +1,11 @@
+{
+  "appId": "com.grokdesk.sniper",
+  "appName": "GrokDesk",
+  "webDir": "www",
+  "backgroundColor": "#05070a",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#05070a",
+    "preferredContentMode": "mobile"
+  }
+}

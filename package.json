@@ -1,0 +1,22 @@
+{
+  "name": "grokdesk-sniper",
+  "version": "1.0.0",
+  "description": "GrokDesk: a self-learning AI paper-trading team that snipes Pump.fun launches",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "sim": "FEED_MODE=sim node server/index.js",
+    "live": "FEED_MODE=pumpportal node server/index.js",
+    "rpc": "FEED_MODE=rpc node server/index.js",
+    "train": "node scripts/train.js",
+    "backtest": "node scripts/backtest.js",
+    "icons": "node scripts/make-icons.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "https-proxy-agent": "^7.0.6",
+    "ws": "^8.18.0"
+  }
+}
