@@ -25,7 +25,7 @@ export const STRESS_EXEC = { latencyMs: 1200, failRate: 0.2, priorityFeeSol: 0.0
 export function backtestStrategy(events, strategy, opts = {}) {
   const rugs = opts.creatorRugs || {};
   const s = { ...strategy, active: true, params: { ...strategy.params } };
-  const eng = new Engine({ strategies: [s], startingSol: opts.startingSol ?? 10, exec: opts.exec, seed: opts.seed ?? 11,
+  const eng = new Engine({ strategies: [s], startingSol: opts.startingSol ?? 10, exec: opts.exec, seed: opts.seed ?? 11, fixedSizing: opts.fixedSizing ?? true,
     creatorRugs: (c) => rugs[c] || 0 });
   for (const e of events) eng.handle(e);
   eng.liquidateAll('backtest_end');
@@ -39,7 +39,7 @@ export function backtestStrategy(events, strategy, opts = {}) {
   const causes = {};
   for (const t of trades) causes[t.exitReason] = (causes[t.exitReason] || 0) + 1;
   return { id: strategy.id, all, is, oos, fitAll: fitness(all), fitIS: fitness(is, { minTrades: 3 }), fitOOS: fitness(oos, { minTrades: 2 }),
-    exits: causes, equityEnd: eng.cash };
+    exits: causes, equityEnd: eng.cash, trades: opts.keepTrades ? trades : undefined };
 }
 
 export function runJobs(events, jobs) {

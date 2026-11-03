@@ -11,6 +11,7 @@
     "rpc": "FEED_MODE=rpc node server/index.js",
     "train": "node scripts/train.js",
     "backtest": "node scripts/backtest.js",
+    "evaluate": "node scripts/evaluate.js",
     "icons": "node scripts/make-icons.js",
     "test": "node --test test/*.test.js"
   },

@@ -18,6 +18,13 @@ const mode = config.feedMode;
 const dataDir = path.join(config.dataDir, mode === 'sim' ? 'sim' : 'live');
 const cfg = { ...config, dataDir };
 const memory = new Memory(dataDir);
+// First run: start from the strategies that passed `npm run evaluate` (if present) instead of raw seeds.
+if (!(memory.data.strategies || []).some((s) => s.active)) {
+  try {
+    const learned = JSON.parse(fs.readFileSync(path.join(config.dataDir, 'learned-strategies.json'), 'utf8'));
+    if (learned.length >= 3) memory.data.strategies = learned.map((s) => ({ ...s, active: true, origin: `${s.origin}+evaluated` }));
+  } catch { /* no evaluated lineup yet */ }
+}
 const llm = new LLM(config.llm);
 const backtests = new BacktestService({ mode: 'worker' });
 const desk = new Desk({ config: cfg, memory, llm, backtests });

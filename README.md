@@ -39,6 +39,7 @@ A self-learning AI trading desk that watches every new Pump.fun launch in real t
 npm install
 npm test                 # 18 tests: curve math, filters, risk caps, critic, strategist, decoder, end-to-end learning
 npm run train -- 3       # fast-forward: 3 simulated hours of the full learning loop in ~2 minutes
+npm run evaluate         # train 6h, then rank seed vs learned strategies on unseen sessions -> docs/evaluation.md
 npm run sim              # UI + paper trading on the synthetic market  -> http://localhost:8787
 npm run live             # UI + paper trading on the real PumpPortal websocket
 FEED_MODE=rpc SOLANA_WS_URL=wss://... npm start   # fastest: direct RPC logsSubscribe (processed commitment)

@@ -20,7 +20,8 @@ const emptyStats = () => ({ n: 0, wins: 0, pnl: 0, grossWin: 0, grossLoss: 0, cu
  */
 export class Engine {
   constructor({ strategies = [], startingSol = 10, exec = {}, seed = 7, emit = () => {}, creatorRugs = () => 0,
-    evalThrottleMs = 300, pruneAfterSec = 900 } = {}) {
+    evalThrottleMs = 300, pruneAfterSec = 900, fixedSizing = false } = {}) {
+    this.fixedSizing = fixedSizing; // size off starting equity (no compounding) for fair comparisons
     this.exec = { ...DEFAULT_EXEC, ...exec };
     this.rng = new Rng(seed);
     this.emit = emit;
@@ -163,7 +164,7 @@ export class Engine {
       const mintHolders = (this.byMint.get(t.mint)?.size || 0) + this.pending.filter((o) => o.kind === 'buy' && o.mint === t.mint).length;
       const openPositions = this.positions.size + this.pending.filter((o) => o.kind === 'buy').length;
       const eq = this.equity();
-      const a = this.risk.approve({ params: s.params, equity: eq, cash: this.cash, openPositions, openCost: this.openCost(), mintHolders, now: this.now });
+      const a = this.risk.approve({ params: s.params, equity: this.fixedSizing ? Math.min(eq, this.startingSol) : eq, cash: this.cash, openPositions, openCost: this.openCost(), mintHolders, now: this.now });
       if (!a.ok) { this.emit('riskReject', { token: t, strategy: s, reason: a.reason, r }); continue; }
       if (a.sizeSol + this.exec.priorityFeeSol + this.exec.jitoTipSol > this.cash) continue;
       this.entered.add(key);

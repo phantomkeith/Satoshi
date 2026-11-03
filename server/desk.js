@@ -45,7 +45,7 @@ export class Desk extends EventEmitter {
 
     const saved = (memory.data.strategies || []).filter((s) => s.active);
     const strategies = saved.length ? saved.map((s) => ({ ...s, params: normalizeParams(s.params) })) : SEED_STRATEGIES.map(makeStrategy);
-    this.engine = new Engine({ strategies, startingSol: this.startingSol, exec: config.exec, seed,
+    this.engine = new Engine({ strategies, startingSol: this.startingSol, exec: config.exec, seed, fixedSizing: !!config.fixedSizing,
       emit: (k, d) => this.onEngine(k, d), creatorRugs: (c) => memory.creatorRugs(c) });
     this.allStrategies = new Map(strategies.map((s) => [s.id, s]));
     for (const s of memory.data.strategies || []) if (!this.allStrategies.has(s.id)) this.allStrategies.set(s.id, s);
